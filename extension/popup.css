@@ -1,0 +1,945 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg-deep: #0E100F;
+  --bg-canvas: #121413;
+  --bg-surface: #1C1E1D;
+  --bg-recessed: #131514;
+  --bg-hover: #242725;
+  --border-hairline: rgba(255, 255, 255, 0.06);
+  --border-subtle: rgba(255, 255, 255, 0.045);
+  --border-strong: rgba(255, 255, 255, 0.11);
+  --text-primary: #F5F7F6;
+  --text-secondary: #A8B0AC;
+  --text-muted: #858D88;
+  --text-on-mint: #0B1410;
+  --mint: #2CD09A;
+  --mint-hover: #25BA89;
+  --safe: #2CD09A;
+  --warning: #E7A942;
+  --danger: #EB6262;
+  --danger-solid: #DC4B4B;
+  --ease-out: 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+body {
+  width: 380px;
+  font-family: var(--font-sans);
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-size: 12.5px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  background: var(--bg-deep);
+}
+
+/* 1. Top Utility Bar (Matte Charcoal Floating Pill Bar) */
+.utility-bar {
+  height: 46px;
+  padding: 0 8px 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--bg-surface);
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.32);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.brand-mark {
+  color: var(--mint);
+  flex-shrink: 0;
+}
+
+.brand-name {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.brand-tag {
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  background: var(--bg-recessed);
+  padding: 2px 7px;
+  border-radius: 7px;
+}
+
+.utility-right {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+}
+
+.latency-readout {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+.mode-switch {
+  display: inline-flex;
+  align-items: center;
+  background: var(--bg-recessed);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 9px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--ease-out), color var(--ease-out), box-shadow var(--ease-out);
+}
+
+.tab-btn:hover:not(.active) {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.tab-btn.active {
+  color: var(--text-on-mint);
+  background: var(--mint);
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(44, 208, 154, 0.22);
+}
+
+/* Tab Panels */
+.tab-panel {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tab-panel.active {
+  display: flex;
+}
+
+/* 2. Primary Verdict & Target Hero (Matte Charcoal Panel with Recessed Domain Pill) */
+.verdict-hero {
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--bg-surface);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.34);
+  transition: background var(--ease-out);
+}
+
+.verdict-hero.warning {
+  background: linear-gradient(155deg, rgba(231, 169, 66, 0.08), transparent 55%), var(--bg-surface);
+}
+
+.verdict-hero.danger {
+  background: linear-gradient(155deg, rgba(235, 98, 98, 0.1), transparent 55%), var(--bg-surface);
+}
+
+.verdict-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.verdict-badge-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-badge {
+  font-family: var(--font-sans);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--safe);
+  background: var(--bg-recessed);
+  padding: 3px 10px;
+  border-radius: 8px;
+}
+
+.verdict-hero.warning .status-badge {
+  color: var(--warning);
+}
+
+.verdict-hero.danger .status-badge {
+  color: var(--danger);
+}
+
+.risk-telemetry {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  background: var(--bg-recessed);
+  padding: 3px 9px;
+  border-radius: 8px;
+}
+
+.risk-label {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.risk-score {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.verdict-hero.warning .risk-score {
+  color: var(--warning);
+}
+
+.verdict-hero.danger .risk-score {
+  color: var(--danger);
+}
+
+.risk-max {
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.target-block {
+  margin-top: 11px;
+}
+
+.domain-name {
+  font-size: 15.5px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+  word-break: break-word;
+  line-height: 1.3;
+}
+
+.url-row {
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 28px;
+  background: var(--bg-recessed);
+  border-radius: 9px;
+  padding: 4px 8px 4px 10px;
+}
+
+.url-preview {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  flex: 1;
+}
+
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--bg-surface);
+  border: none;
+  border-radius: 7px;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 7px;
+  cursor: pointer;
+  opacity: 0;
+  flex-shrink: 0;
+  transition: opacity var(--ease-out), background var(--ease-out), color var(--ease-out);
+}
+
+.url-row:hover .copy-btn,
+.copy-btn:focus-visible,
+.copy-btn.copied {
+  opacity: 1;
+}
+
+.copy-btn:hover {
+  background: var(--mint);
+  color: var(--text-on-mint);
+}
+
+.copy-btn.copied {
+  background: rgba(44, 208, 154, 0.16);
+  color: var(--mint);
+}
+
+.verdict-actions {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+}
+
+/* Signature Mint-Emerald Action Buttons (Reference "+ Create New Event" Style) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 12px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 15px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: background var(--ease-out), color var(--ease-out), transform var(--ease-out), box-shadow var(--ease-out);
+}
+
+.btn:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+.btn-tactile {
+  background: var(--mint);
+  color: var(--text-on-mint);
+  box-shadow: 0 4px 12px rgba(44, 208, 154, 0.2);
+}
+
+.btn-tactile:hover:not(:disabled) {
+  background: var(--mint-hover);
+  transform: translateY(-0.5px);
+  box-shadow: 0 6px 16px rgba(44, 208, 154, 0.26);
+}
+
+.btn-tactile:active:not(:disabled) {
+  transform: translateY(0.5px);
+}
+
+.btn-tactile.is-trusted {
+  color: var(--mint);
+  background: var(--bg-recessed);
+  box-shadow: none;
+}
+
+.btn-tactile.is-trusted:hover:not(:disabled) {
+  background: rgba(44, 208, 154, 0.14);
+  transform: none;
+}
+
+.btn-icon {
+  flex-shrink: 0;
+}
+
+.btn-primary {
+  background: var(--mint);
+  color: var(--text-on-mint);
+  padding: 8px 15px;
+  box-shadow: 0 4px 12px rgba(44, 208, 154, 0.18);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--mint-hover);
+}
+
+/* 3. Panel Sections & Heuristic Check Matrix (Matte Charcoal Cards) */
+.panel-section {
+  background: var(--bg-surface);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px 8px;
+}
+
+.section-header h2 {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+}
+
+.section-meta {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--mint);
+  background: var(--bg-recessed);
+  padding: 2px 9px;
+  border-radius: 999px;
+}
+
+.section-tools {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--bg-recessed);
+  border: none;
+  outline: none;
+  border-radius: 999px;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: background var(--ease-out), color var(--ease-out);
+}
+
+.tool-btn:hover:not(:disabled) {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.tool-btn:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+.tool-btn.copied {
+  background: rgba(44, 208, 154, 0.16);
+  color: var(--mint);
+}
+
+.tool-btn.spinning svg {
+  animation: pg-spin 0.6s linear infinite;
+}
+
+@keyframes pg-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.telemetry-strip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 14px 10px;
+  flex-wrap: wrap;
+}
+
+.telemetry-chip {
+  font-size: 10px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+  background: var(--bg-recessed);
+  padding: 3px 9px;
+  border-radius: 8px;
+}
+
+.check-matrix {
+  display: flex;
+  flex-direction: column;
+  max-height: 256px;
+  overflow-y: auto;
+  padding: 0 8px 8px;
+  gap: 4px;
+}
+
+.check-row {
+  border-radius: 11px;
+  padding: 8px 10px;
+  background: var(--bg-recessed);
+  cursor: pointer;
+  transition: background var(--ease-out);
+}
+
+.check-row:hover {
+  background: var(--bg-hover);
+}
+
+.check-row-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.check-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.check-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-sans);
+  font-size: 10.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  padding: 2px 9px;
+  border-radius: 999px;
+}
+
+.check-status.pass {
+  color: var(--text-on-mint);
+  background: var(--safe);
+}
+
+.check-status.warn {
+  color: var(--bg-deep);
+  background: var(--warning);
+}
+
+.check-status.fail {
+  color: #FFFFFF;
+  background: var(--danger-solid);
+}
+
+.check-status.na {
+  color: var(--text-muted);
+  background: var(--bg-surface);
+}
+
+.check-telemetry-note {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Expanded Findings inside a triggered Heuristic Row */
+.check-findings {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  background: var(--bg-surface);
+}
+
+.finding-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.finding-entry-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.finding-entry-title {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.finding-entry-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.sev-tag {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+
+.sev-tag.high {
+  color: #FFFFFF;
+  background: var(--danger);
+}
+
+.sev-tag.medium {
+  color: var(--bg-deep);
+  background: var(--warning);
+}
+
+.finding-weight {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.finding-entry-detail {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+/* Redirect Chain Trace */
+.redirect-trace {
+  padding: 2px 14px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.hop-chip {
+  background: var(--bg-recessed);
+  color: var(--text-primary);
+  padding: 3px 9px;
+  border-radius: 8px;
+  word-break: break-all;
+}
+
+.hop-arrow {
+  color: var(--mint);
+  font-weight: 600;
+}
+
+/* Rules & Whitelist Tab (3-Color Borderless Sensitivity Pills) */
+.sensitivity-group {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  padding: 2px 12px 12px;
+}
+
+.seg-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: var(--bg-recessed);
+  border: none;
+  outline: none;
+  border-radius: 12px;
+  color: var(--text-secondary);
+  padding: 9px 6px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--ease-out), color var(--ease-out), box-shadow var(--ease-out);
+}
+
+.seg-btn small {
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+/* Low = Green */
+.seg-btn[data-level="low"] {
+  color: var(--safe);
+}
+
+.seg-btn[data-level="low"]:hover:not(.active) {
+  background: rgba(44, 208, 154, 0.12);
+}
+
+.seg-btn[data-level="low"].active {
+  background: var(--safe);
+  color: var(--text-on-mint);
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(44, 208, 154, 0.22);
+}
+
+.seg-btn[data-level="low"].active small {
+  color: rgba(11, 20, 16, 0.78);
+  font-weight: 500;
+}
+
+/* Medium = Yellow / Amber */
+.seg-btn[data-level="medium"] {
+  color: var(--warning);
+}
+
+.seg-btn[data-level="medium"]:hover:not(.active) {
+  background: rgba(231, 169, 66, 0.12);
+}
+
+.seg-btn[data-level="medium"].active {
+  background: var(--warning);
+  color: var(--text-on-mint);
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(231, 169, 66, 0.22);
+}
+
+.seg-btn[data-level="medium"].active small {
+  color: rgba(11, 20, 16, 0.78);
+  font-weight: 500;
+}
+
+/* High = Red */
+.seg-btn[data-level="high"] {
+  color: var(--danger);
+}
+
+.seg-btn[data-level="high"]:hover:not(.active) {
+  background: rgba(235, 98, 98, 0.14);
+}
+
+.seg-btn[data-level="high"].active {
+  background: var(--danger-solid);
+  color: #FFFFFF;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(220, 75, 75, 0.24);
+}
+
+.seg-btn[data-level="high"].active small {
+  color: rgba(255, 255, 255, 0.88);
+  font-weight: 500;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: background var(--ease-out);
+}
+
+.setting-row:hover {
+  background: var(--bg-hover);
+}
+
+.setting-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.setting-copy strong {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.setting-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Reference-Style Matte Pill Toggle Switch (Recessed Track + Mint Knob) */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch-track {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-recessed);
+  border-radius: 999px;
+  transition: background var(--ease-out);
+}
+
+.switch-track::before {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 3px;
+  top: 3px;
+  background: var(--text-muted);
+  border-radius: 50%;
+  transition: transform var(--ease-out), background var(--ease-out), box-shadow var(--ease-out);
+}
+
+.switch input:checked + .switch-track {
+  background: rgba(44, 208, 154, 0.18);
+}
+
+.switch input:checked + .switch-track::before {
+  transform: translateX(18px);
+  background: var(--mint);
+  box-shadow: 0 2px 8px rgba(44, 208, 154, 0.4);
+}
+
+/* Whitelist Form & List */
+.inline-form {
+  display: flex;
+  gap: 7px;
+  padding: 2px 12px 10px;
+}
+
+.inline-form input {
+  flex: 1;
+  background: var(--bg-recessed);
+  border: 1px solid transparent;
+  border-radius: 11px;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  padding: 7px 12px;
+  outline: none;
+  transition: border-color var(--ease-out), background var(--ease-out);
+}
+
+.inline-form input::placeholder {
+  color: var(--text-muted);
+}
+
+.inline-form input:focus {
+  border-color: rgba(44, 208, 154, 0.45);
+  background: var(--bg-deep);
+}
+
+.domain-list {
+  list-style: none;
+  max-height: 132px;
+  overflow-y: auto;
+  padding: 0 8px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.domain-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 10px;
+  border-radius: 10px;
+  background: var(--bg-recessed);
+  font-size: 12px;
+  color: var(--text-primary);
+  transition: background var(--ease-out);
+}
+
+.domain-list li:hover {
+  background: var(--bg-hover);
+}
+
+.domain-list li.empty-row {
+  justify-content: center;
+  color: var(--text-muted);
+  padding: 11px 10px;
+}
+
+.remove-btn {
+  background: rgba(235, 98, 98, 0.14);
+  border: none;
+  outline: none;
+  border-radius: 999px;
+  color: var(--danger);
+  font-family: var(--font-sans);
+  font-size: 10.5px;
+  font-weight: 500;
+  padding: 2px 9px;
+  cursor: pointer;
+  transition: background var(--ease-out), color var(--ease-out);
+}
+
+.remove-btn:hover {
+  background: var(--danger);
+  color: #FFFFFF;
+}
+
+/* 4. Minimalist Status Footer (Matte Charcoal Floating Pill) */
+.status-footer {
+  height: 34px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--bg-surface);
+  border-radius: 12px;
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.footer-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.footer-right {
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* Minimal Scrollbars */
+.check-matrix::-webkit-scrollbar,
+.domain-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.check-matrix::-webkit-scrollbar-track,
+.domain-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.check-matrix::-webkit-scrollbar-thumb,
+.domain-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+}

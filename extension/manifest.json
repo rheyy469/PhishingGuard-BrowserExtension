@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "PhishGuard Local",
+  "version": "1.5.0",
+  "description": "100% local real-time phishing detector analyzing URLs, IDN homographs, login form DOM structure, and redirect chains.",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "webNavigation",
+    "tabs"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "scripts": ["background.js"]
+  },
+  "action": {
+    "default_title": "PhishGuard Local - Page Security Status",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon-safe-16.png",
+      "32": "icons/icon-safe-32.png",
+      "48": "icons/icon-safe-48.png",
+      "128": "icons/icon-safe-128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-safe-16.png",
+    "32": "icons/icon-safe-32.png",
+    "48": "icons/icon-safe-48.png",
+    "128": "icons/icon-safe-128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": [
+        "src/domains.js",
+        "src/url_analyzer.js",
+        "src/dom_analyzer.js",
+        "src/risk_engine.js",
+        "content_script.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "phishguard-local@localhost.local",
+      "strict_min_version": "109.0"
+    }
+  }
+}

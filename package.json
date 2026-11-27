@@ -1,0 +1,14 @@
+{
+  "name": "phishguard-local",
+  "version": "1.1.0",
+  "description": "PhishGuard Local - 100% Local Real-Time Browser Phishing Detection Extension",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/run_tests.js",
+    "mock-server": "node mock-server/server.js",
+    "generate-icons": "node scripts/generate_icons.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

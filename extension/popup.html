@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhishGuard Local</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Top Utility Bar (~44px) -->
+    <header class="utility-bar">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 18 18" width="16" height="16" fill="none" aria-hidden="true">
+          <path d="M9 1.5L15.25 4.1V8.65C15.25 12.45 12.62 15.32 9 16.5C5.38 15.32 2.75 12.45 2.75 8.65V4.1L9 1.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+          <path d="M5.4 9.2H7.2L8.35 6.8L9.85 11.1L10.95 9.2H12.6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="brand-name">PhishGuard</span>
+        <span class="brand-tag">LOCAL</span>
+      </div>
+
+      <div class="utility-right">
+        <span class="latency-readout" id="perfPill" title="URL and DOM analysis latency">--ms</span>
+        <nav class="mode-switch" role="tablist" aria-label="Views">
+          <button class="tab-btn active" data-tab="overview" role="tab" aria-selected="true" type="button">Scan</button>
+          <button class="tab-btn" data-tab="settings" role="tab" aria-selected="false" type="button">Rules &amp; Whitelist</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Scan View -->
+    <main id="tab-overview" class="tab-panel active">
+      <!-- Primary Verdict & Target Hero -->
+      <section class="verdict-hero safe" id="statusCard">
+        <div class="verdict-row">
+          <div class="verdict-badge-wrap">
+            <span class="status-badge" id="statusBadge">SCANNING</span>
+          </div>
+          <div class="risk-telemetry" aria-label="Risk score">
+            <span class="risk-label">RISK</span>
+            <span class="risk-score"><span id="scoreValue">0</span><span class="risk-max">/100</span></span>
+          </div>
+        </div>
+
+        <div class="target-block">
+          <div class="domain-name" id="domainName">-</div>
+          <div class="url-row">
+            <div class="url-preview" id="urlPreview">-</div>
+            <button id="copyUrlBtn" class="copy-btn" type="button" title="Copy URL" aria-label="Copy URL" hidden>
+              <svg class="copy-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" aria-hidden="true">
+                <rect x="5.5" y="5.5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
+                <path d="M10.5 5.5V3.5C10.5 2.95 10.05 2.5 9.5 2.5H3.5C2.95 2.5 2.5 2.95 2.5 3.5V9.5C2.5 10.05 2.95 10.5 3.5 10.5H5.5" stroke="currentColor" stroke-width="1.3"/>
+              </svg>
+              <span class="copy-label" id="copyUrlLabel">Copy</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="verdict-actions">
+          <button id="whitelistToggleBtn" class="btn btn-tactile" type="button" disabled>
+            <svg class="btn-icon" viewBox="0 0 16 16" width="13" height="13" fill="none" aria-hidden="true">
+              <path d="M8 1.8L13.2 4V7.8C13.2 10.95 11.02 13.34 8 14.3C4.98 13.34 2.8 10.95 2.8 7.8V4L8 1.8Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+              <path d="M5.8 8.1L7.3 9.6L10.3 6.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span id="whitelistBtnText">Trust domain</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Diagnostic Checks / Technical Findings -->
+      <section class="panel-section">
+        <div class="section-header">
+          <h2>Diagnostic Checks</h2>
+          <div class="section-tools">
+            <button id="rescanBtn" class="tool-btn" type="button" title="Re-scan active page" aria-label="Re-scan active page">
+              <svg viewBox="0 0 16 16" width="11" height="11" fill="none" aria-hidden="true">
+                <path d="M13.5 8a5.5 5.5 0 1 1-1.35-3.6M13.5 3.2v2.4h-2.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Re-scan</span>
+            </button>
+            <button id="exportReportBtn" class="tool-btn" type="button" title="Copy diagnostic report as JSON" aria-label="Copy diagnostic report as JSON">
+              <span id="exportBtnLabel">JSON</span>
+            </button>
+            <span class="section-meta" id="findingsCount">0</span>
+          </div>
+        </div>
+        <div class="telemetry-strip" id="telemetryStrip" hidden>
+          <span class="telemetry-chip" id="statForms">Forms: 0</span>
+          <span class="telemetry-chip" id="statLinks">Links: 0</span>
+          <span class="telemetry-chip" id="statIframes">Iframes: 0</span>
+          <span class="telemetry-chip" id="statScripts">Scripts: 0</span>
+        </div>
+        <div id="findingsList" class="check-matrix"></div>
+      </section>
+
+      <!-- Redirect Chain Trace (shown only when redirects occur) -->
+      <section class="panel-section" id="redirectSection" hidden>
+        <div class="section-header">
+          <h2>Redirect Trace</h2>
+          <span class="section-meta" id="redirectCount">0</span>
+        </div>
+        <div id="redirectTrace" class="redirect-trace"></div>
+      </section>
+    </main>
+
+    <!-- Rules & Whitelist View -->
+    <main id="tab-settings" class="tab-panel">
+      <section class="panel-section">
+        <div class="section-header">
+          <h2>Detection Sensitivity</h2>
+          <span class="section-meta">Warn / Danger</span>
+        </div>
+        <div class="sensitivity-group" id="sensitivityGroup">
+          <button type="button" class="seg-btn" data-level="low">
+            <span>Low</span>
+            <small>40 / 75</small>
+          </button>
+          <button type="button" class="seg-btn active" data-level="medium">
+            <span>Medium</span>
+            <small>25 / 60</small>
+          </button>
+          <button type="button" class="seg-btn" data-level="high">
+            <span>High</span>
+            <small>15 / 45</small>
+          </button>
+        </div>
+      </section>
+
+      <section class="panel-section">
+        <label class="setting-row" for="showBannerToggle">
+          <div class="setting-copy">
+            <strong>Page Warning Banner</strong>
+            <span class="setting-desc">Inject a top bar when risk reaches Warning or Danger.</span>
+          </div>
+          <span class="switch">
+            <input type="checkbox" id="showBannerToggle" checked>
+            <span class="switch-track"></span>
+          </span>
+        </label>
+      </section>
+
+      <section class="panel-section">
+        <div class="section-header">
+          <h2>Local Whitelist</h2>
+          <span class="section-meta" id="whitelistCount">0</span>
+        </div>
+        <form id="addWhitelistForm" class="inline-form">
+          <input type="text" id="whitelistInput" placeholder="example.com" autocomplete="off" spellcheck="false">
+          <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+        <ul id="whitelistItems" class="domain-list"></ul>
+      </section>
+    </main>
+
+    <!-- Minimalist Status Footer (~32px) -->
+    <footer class="status-footer">
+      <div class="footer-left">
+        <svg viewBox="0 0 16 16" width="11" height="11" fill="none" aria-hidden="true">
+          <rect x="3" y="7" width="10" height="6.8" rx="1.6" stroke="currentColor" stroke-width="1.3"/>
+          <path d="M5.5 7V5.1a2.5 2.5 0 0 1 5 0V7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+        <span>Passive DOM scan &bull; Zero telemetry</span>
+      </div>
+      <span class="footer-right" id="footerMeta">Medium &bull; 0 trusted</span>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
